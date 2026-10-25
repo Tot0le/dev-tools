@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devtools-py"
+version = "0.1.0"
+description = "Personal Python development utilities (CLI, files, math, sets, strings)"
+readme = "../README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["devtools_py*"]
