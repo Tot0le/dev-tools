@@ -1,13 +1,22 @@
-from devtools_py import constante
+from devtools_py import constants
 from devtools_py.cli import (
-    ALaLigne,
-    pressEnterToContinue,
-    clearConsole,
-    saisieFloat,
-    saisieEntier,
-    saisieStr,
-    saisieChaineCaractereInterdit,
-    saisieYesOrNO,
+    # English API
+    print_newlines,
+    wait_for_enter,
+    clear_console,
+    prompt_float,
+    prompt_int,
+    prompt_choice,
+    prompt_filtered_str,
+    prompt_yes_or_no,
+    # French API
+    aller_a_la_ligne,
+    attendre_entree,
+    saisir_float,
+    saisir_entier,
+    saisir_choix,
+    saisir_chaine_filtree,
+    saisir_oui_ou_non,
 )
 from devtools_py.files import (
     nombreLigneFichier,
@@ -49,15 +58,27 @@ from devtools_py.strings import (
 )
 
 __all__: list[str] = [
-    "constante",
-    "ALaLigne",
-    "pressEnterToContinue",
-    "clearConsole",
-    "saisieFloat",
-    "saisieEntier",
-    "saisieStr",
-    "saisieChaineCaractereInterdit",
-    "saisieYesOrNO",
+    "constants",
+    # --- English API ---
+    # CLI
+    "print_newlines",
+    "wait_for_enter",
+    "clear_console",
+    "prompt_float",
+    "prompt_int",
+    "prompt_choice",
+    "prompt_filtered_str",
+    "prompt_yes_or_no",
+    # --- French API ---
+    # CLI
+    "aller_a_la_ligne",
+    "attendre_entree",
+    "saisir_float",
+    "saisir_entier",
+    "saisir_choix",
+    "saisir_chaine_filtree",
+    "saisir_oui_ou_non",
+    # Files
     "nombreLigneFichier",
     "effacerContenuFichier",
     "chargerFichierBin",
@@ -73,6 +94,7 @@ __all__: list[str] = [
     "donneToutFichierBin",
     "afficherFichierBin",
     "afficherLigneFichierBin",
+    # Math & Sets
     "estPremier",
     "fibonacci_iterative",
     "fibonacci_recursive",
@@ -86,6 +108,7 @@ __all__: list[str] = [
     "intersection",
     "difference",
     "disjointes",
+    # Strings
     "compterNombreOccurences",
     "enleverOccurence",
     "ajouterOccurence",
