@@ -5,8 +5,8 @@ from typing import Any, BinaryIO
 
 def chargerFichierBin(cheminFichier: str) -> list[Any]:
     """
-    Fonction générique qui lit n'importe quel fichier binaire et retourne son contenu (une liste).
-    Renvoie une liste vide [] si le fichier n'existe pas ou est corrompu.
+    Lit un fichier binaire et retourne la liste d'éléments qu'il contient.
+    Retourne une liste vide [] si le fichier n'existe pas, est vide ou est corrompu.
     """
     contenu: list[Any] = []
     f: BinaryIO
@@ -23,7 +23,7 @@ def chargerFichierBin(cheminFichier: str) -> list[Any]:
 
 def sauvegarderFichierBin(cheminFichier: str, donnees: list[Any]) -> None:
     """
-    Fonction générique qui sauvegarde n'importe quelle liste dans un fichier binaire.
+    Sauvegarde une liste d'éléments dans un fichier binaire (écrase le contenu existant).
     """
     f: BinaryIO
 
@@ -31,29 +31,27 @@ def sauvegarderFichierBin(cheminFichier: str, donnees: list[Any]) -> None:
         pickle.dump(donnees, f)
 
 
-def rajouterTexteFichierBin(cheminFichier: str, donnee: str) -> None:
+def rajouterTexteFichierBin(cheminFichier: str, donnee: Any) -> None:
     """
-    Rajoute une chaîne de caractères dans un fichier binaire contenant une liste.
+    Ajoute un élément simple (str, int, etc.) à la fin de la liste stockée dans un fichier binaire.
     """
-    listeGlobale: list[Any]
-
-    listeGlobale = chargerFichierBin(cheminFichier)
-    listeGlobale = listeGlobale + [donnee]
+    listeGlobale: list[Any] = chargerFichierBin(cheminFichier)
+    listeGlobale.append(donnee)
     sauvegarderFichierBin(cheminFichier, listeGlobale)
 
 
 def afficherFichierBinSimple(cheminDuFichier: str) -> None:
     """
-    Affiche tout le contenu d'un fichier binaire simple.
+    Affiche le contenu brut d'un fichier binaire simple dans la console.
     """
     listeGeneral: list[Any]
 
     if not os.path.exists(cheminDuFichier):
-        print(f"Erreur : Le fichier {cheminDuFichier} est introuvable.")
+        print(f"Erreur : Le fichier '{cheminDuFichier}' est introuvable.")
     else:
         listeGeneral = chargerFichierBin(cheminDuFichier)
 
-        if listeGeneral == []:
+        if not listeGeneral:
             print("Le fichier est vide ou n'a pas pu être lu.")
         else:
             print(listeGeneral)
