@@ -1,38 +1,34 @@
+from typing import cast
+
+
 def compterNombreOccurences(
     monMot: str,
     onlyThisChar: list[str] | None = None
 ) -> list[list[str | int]]:
     """
-    Fonction générant une liste de listes [caractere, nbOccurences].
-    Exemple de retour : [['A', 2], ['B', 1]]
+    Compte le nombre d'occurrences de chaque caractère dans 'monMot'.
+    Si 'onlyThisChar' est fourni, ne compte que les caractères présents dans cette liste.
+    Retourne une liste de paires [caractere, nbOccurences], ex: [['A', 2], ['B', 1]].
     """
     listeOccurences: list[list[str | int]] = []
-    compteur: int
-    listeCaractereDejaTraites: list[str]
-    caractereACompter: str
-    caractereDansMot: str
+    caracteresCibles: list[str] = []
     caractere: str
-    caractereBis: str
+    caractereMot: str
+    compteur: int
 
     if onlyThisChar is not None:
-        for caractereACompter in onlyThisChar:
-            compteur = 0
-            for caractereDansMot in monMot:
-                if caractereDansMot == caractereACompter:
-                    compteur += 1
-
-            listeOccurences.append([caractereACompter, compteur])
+        caracteresCibles = onlyThisChar
     else:
-        listeCaractereDejaTraites = []
         for caractere in monMot:
-            if caractere not in listeCaractereDejaTraites:
-                compteur = 0
-                for caractereBis in monMot:
-                    if caractere == caractereBis:
-                        compteur += 1
+            if caractere not in caracteresCibles:
+                caracteresCibles.append(caractere)
 
-                listeCaractereDejaTraites.append(caractere)
-                listeOccurences.append([caractere, compteur])
+    for caractere in caracteresCibles:
+        compteur = 0
+        for caractereMot in monMot:
+            if caractereMot == caractere:
+                compteur += 1
+        listeOccurences.append([caractere, compteur])
 
     return listeOccurences
 
@@ -42,13 +38,15 @@ def enleverOccurence(
     lettre: str
 ) -> list[list[str | int]]:
     """
-    Cherche la lettre et fait -1 sur son occurrence.
+    Décrémente de 1 le compteur d'occurrences associé à 'lettre' dans 'listeOccurences'.
     """
-    listeLettAndOcc: list[str | int]
+    paire: list[str | int]
+    valeurActuelle: int
 
-    for listeLettAndOcc in listeOccurences:
-        if listeLettAndOcc[0] == lettre:
-            listeLettAndOcc[1] = int(listeLettAndOcc[1]) - 1
+    for paire in listeOccurences:
+        if paire[0] == lettre:
+            valeurActuelle = cast(int, paire[1])
+            paire[1] = valeurActuelle - 1
 
     return listeOccurences
 
@@ -58,26 +56,31 @@ def ajouterOccurence(
     lettre: str
 ) -> list[list[str | int]]:
     """
-    Cherche la lettre et fait +1 sur son occurrence.
+    Incrémente de 1 le compteur d'occurrences associé à 'lettre' dans 'listeOccurences'.
     """
-    listeLettAndOcc: list[str | int]
+    paire: list[str | int]
+    valeurActuelle: int
 
-    for listeLettAndOcc in listeOccurences:
-        if listeLettAndOcc[0] == lettre:
-            listeLettAndOcc[1] = int(listeLettAndOcc[1]) + 1
+    for paire in listeOccurences:
+        if paire[0] == lettre:
+            valeurActuelle = cast(int, paire[1])
+            paire[1] = valeurActuelle + 1
 
     return listeOccurences
 
 
 def verifierStockDispo(listeOccurences: list[list[str | int]], lettre: str) -> bool:
     """
-    Renvoie Vrai si la lettre existe et qu'il en reste au moins 1.
+    Retourne True si 'lettre' est présente dans 'listeOccurences' avec un compteur strictement positif.
     """
     stockDispo: bool = False
-    listeLettAndOcc: list[str | int]
+    paire: list[str | int]
+    nbRestant: int
 
-    for listeLettAndOcc in listeOccurences:
-        if listeLettAndOcc[0] == lettre and int(listeLettAndOcc[1]) > 0:
-            stockDispo = True
+    for paire in listeOccurences:
+        if paire[0] == lettre:
+            nbRestant = cast(int, paire[1])
+            if nbRestant > 0:
+                stockDispo = True
 
     return stockDispo

@@ -1,10 +1,9 @@
 from random import randint
-from typing import Any
 
 
 def genererListeValeurEntierAleatoire(nombre: int, borneMin: int, borneMax: int) -> list[int]:
     """
-    Fonction qui génère une liste de valeurs entières aléatoires entre 2 bornes données.
+    Génère une liste de 'nombre' entiers aléatoires compris entre 'borneMin' et 'borneMax' inclus.
     """
     liste: list[int] = []
 
@@ -14,59 +13,75 @@ def genererListeValeurEntierAleatoire(nombre: int, borneMin: int, borneMax: int)
     return liste
 
 
+def nbValeursEnDoublon(liste: list[int]) -> int:
+    """
+    Retourne le nombre de valeurs qui apparaissent plusieurs fois (en doublon) dans la liste.
+    """
+    valeursDoublons: list[int] = []
+    indiceElement: int
+    indiceComparaison: int
+    compteurDoublons: int = 0
+
+    for indiceElement in range(len(liste)):
+        for indiceComparaison in range(indiceElement + 1, len(liste)):
+            if (
+                liste[indiceElement] == liste[indiceComparaison]
+                and liste[indiceElement] not in valeursDoublons
+            ):
+                valeursDoublons.append(liste[indiceElement])
+                compteurDoublons += 1
+
+    return compteurDoublons
+
+
 def nbElementUniqueDansListe(liste: list[int]) -> int:
     """
-    Fonction qui renvoie le nombre d'éléments en doublon dans une liste.
+    Retourne le nombre de valeurs distinctes présentes dans la liste.
     """
-    elementUnique: list[Any] = []
-    indiceElement: int
-    indiceIteraElement: int
-    compteurElementUnique: int = 0
+    elementsVus: list[int] = []
+    element: int
 
-    for indiceElement in range(len(liste) + 1):
-        for indiceIteraElement in range(indiceElement + 1, len(liste)):
-            if (
-                liste[indiceElement] == liste[indiceIteraElement]
-                and liste[indiceElement] not in elementUnique
-                and liste[indiceIteraElement] not in elementUnique
-            ):
-                elementUnique.append(liste[indiceElement])
-                compteurElementUnique += 1
+    for element in liste:
+        if element not in elementsVus:
+            elementsVus.append(element)
 
-    return compteurElementUnique
+    nbUniques: int = len(elementsVus)
+    return nbUniques
 
 
 def estUnEnsemble(liste: list[int]) -> bool:
     """
-    Renvoie True si la liste n'a pas de doublons.
+    Retourne True si la liste est un ensemble (ne contient aucun doublon), False sinon.
     """
-    resultat: bool = False
-
-    if nbElementUniqueDansListe(liste) == 0:
-        resultat = True
-
+    resultat: bool = nbValeursEnDoublon(liste) == 0
     return resultat
 
 
 def rajoutSiPasDedans(valeur: int, liste: list[int]) -> list[int]:
     """
-    Rajoute la valeur en entrée dans la liste si elle n'est pas déjà dedans.
-    Lève une ValueError si la liste n'est pas un ensemble.
+    Ajoute 'valeur' dans 'liste' si elle n'y est pas déjà présente.
+    Lève une ValueError si la liste fournie n'est pas un ensemble (contient des doublons).
     """
-    if not estUnEnsemble(liste):
-        raise ValueError("Erreur, la liste donnée n'est pas un ensemble")
+    nouvelleListe: list[int] = liste.copy()
 
-    if valeur not in liste:
-        liste.append(valeur)
+    if not estUnEnsemble(nouvelleListe):
+        raise ValueError("Erreur : la liste donnée n'est pas un ensemble (elle contient des doublons).")
 
-    return liste
+    if valeur not in nouvelleListe:
+        nouvelleListe.append(valeur)
+
+    return nouvelleListe
 
 
 def union(liste1: list[int], liste2: list[int]) -> list[int]:
     """
-    Fonction qui renvoie l'union des deux listes en entrée.
+    Retourne l'union de deux listes représentant des ensembles.
+    Lève une ValueError si l'une des listes contient des doublons.
     """
-    listeUnion: list[int] = liste1
+    if not estUnEnsemble(liste1) or not estUnEnsemble(liste2):
+        raise ValueError("Erreur : les deux listes doivent être des ensembles sans doublons.")
+
+    listeUnion: list[int] = liste1.copy()
     element: int
 
     for element in liste2:
@@ -77,8 +92,12 @@ def union(liste1: list[int], liste2: list[int]) -> list[int]:
 
 def intersection(liste1: list[int], liste2: list[int]) -> list[int]:
     """
-    Fonction qui renvoie l'intersection des deux listes en entrée.
+    Retourne l'intersection (éléments communs) de deux listes représentant des ensembles.
+    Lève une ValueError si l'une des listes contient des doublons.
     """
+    if not estUnEnsemble(liste1) or not estUnEnsemble(liste2):
+        raise ValueError("Erreur : les deux listes doivent être des ensembles sans doublons.")
+
     listeIntersection: list[int] = []
     element: int
 
@@ -91,8 +110,12 @@ def intersection(liste1: list[int], liste2: list[int]) -> list[int]:
 
 def difference(liste1: list[int], liste2: list[int]) -> tuple[list[int], list[int]]:
     """
-    Fonction qui renvoie les deux différences (liste1 \\ liste2 et liste2 \\ liste1).
+    Retourne un tuple contenant les deux différences symétriques : (liste1 \\ liste2, liste2 \\ liste1).
+    Lève une ValueError si l'une des listes contient des doublons.
     """
+    if not estUnEnsemble(liste1) or not estUnEnsemble(liste2):
+        raise ValueError("Erreur : les deux listes doivent être des ensembles sans doublons.")
+
     listeDiff1_2: list[int] = liste1.copy()
     listeDiff2_1: list[int] = liste2.copy()
     element: int
@@ -110,8 +133,12 @@ def difference(liste1: list[int], liste2: list[int]) -> tuple[list[int], list[in
 
 def disjointes(liste1: list[int], liste2: list[int]) -> bool:
     """
-    Fonction renvoyant un booléen indiquant si les deux listes sont disjointes.
+    Retourne True si les deux ensembles sont disjoints (aucun élément en commun), False sinon.
+    Lève une ValueError si l'une des listes contient des doublons.
     """
+    if not estUnEnsemble(liste1) or not estUnEnsemble(liste2):
+        raise ValueError("Erreur : les deux listes doivent être des ensembles sans doublons.")
+
     sontDisjointes: bool = True
     indElement: int = 0
 

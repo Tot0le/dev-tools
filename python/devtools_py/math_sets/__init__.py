@@ -6,6 +6,7 @@ from devtools_py.math_sets.mathematiques import (
 )
 from devtools_py.math_sets.ensembles_listes import (
     genererListeValeurEntierAleatoire,
+    nbValeursEnDoublon,
     nbElementUniqueDansListe,
     estUnEnsemble,
     rajoutSiPasDedans,
@@ -21,6 +22,7 @@ __all__: list[str] = [
     "fibonacci_recursive",
     "factorielle",
     "genererListeValeurEntierAleatoire",
+    "nbValeursEnDoublon",
     "nbElementUniqueDansListe",
     "estUnEnsemble",
     "rajoutSiPasDedans",
