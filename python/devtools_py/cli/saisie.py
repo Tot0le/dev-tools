@@ -1,23 +1,20 @@
 from typing import cast
 from devtools_py import constante
 
-
-def _convertirType(type_voulu: str, valeur: str, monMessageTypeErreur: str) -> int | float | str | None:
+def _convertirType(typeVoulu: str, valeur: str, msgErreurType: str) -> int | float | str | None:
     """
-    Fonction interne qui convertit la 'valeur' (str) en le 'type_voulu' (str: "int", "float", "str")
-    et gère les erreurs de conversion.
-
-    Retourne la valeur convertie, ou None si la conversion a échoué.
+    Convertit une chaîne de caractères vers le type souhaité ('int', 'float', 'str').
+    Affiche un message d'erreur et retourne None si la conversion échoue.
     """
     resultat: int | float | str | None = None
 
-    match type_voulu:
+    match typeVoulu:
         case "float":
             try:
                 resultat = float(valeur)
             except ValueError:
                 print(f"Erreur : Impossible de convertir la valeur '{valeur}' en float.")
-                print(monMessageTypeErreur)
+                print(msgErreurType)
                 resultat = None
 
         case "int":
@@ -25,153 +22,119 @@ def _convertirType(type_voulu: str, valeur: str, monMessageTypeErreur: str) -> i
                 resultat = int(valeur)
             except ValueError:
                 print(f"Erreur : Impossible de convertir la valeur '{valeur}' en int.")
-                print(monMessageTypeErreur)
+                print(msgErreurType)
                 resultat = None
 
         case "str":
-            print("Utiliser la fonction saisieStr est mieux.")
             resultat = valeur
 
         case _:
-            print(f"Erreur : Le type '{type_voulu}' n'est pas géré. (Choix : float, int, str)")
+            print(f"Erreur : Le type '{typeVoulu}' n'est pas géré. (Choix : float, int, str)")
             resultat = None
 
     return resultat
 
 
-def _verifFloat(
-    valeur: float,
-    msgErreur: str,
-    borneMin: float,
-    borneMax: float,
-    MinInclus: bool,
-    MaxInclus: bool
-) -> float:
+def _estDansIntervalle(
+    valeur: int | float,
+    borneMin: int | float,
+    borneMax: int | float,
+    minInclus: bool,
+    maxInclus: bool
+) -> bool:
     """
-    Verifie si un reel est bien dans un intervalle donne.
+    Vérifie si une valeur numérique respecte les bornes minimale et maximale.
     """
-    maValeurStr: str = str(valeur)
-    messageTypeErreur: str = "Veuillez saisir un nombre réel, pas une chaine de caractère."
+    respecteMin: bool = (valeur >= borneMin) if minInclus else (valeur > borneMin)
+    respecteMax: bool = (valeur <= borneMax) if maxInclus else (valeur < borneMax)
+    estValide: bool = respecteMin and respecteMax
 
-    if MinInclus and MaxInclus:
-        while float(maValeurStr) < borneMin or float(maValeurStr) > borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(float, _convertirType("float", maValeurStr, messageTypeErreur))
-
-    elif not MinInclus and MaxInclus:
-        while float(maValeurStr) <= borneMin or float(maValeurStr) > borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(float, _convertirType("float", maValeurStr, messageTypeErreur))
-
-    elif MinInclus and not MaxInclus:
-        while float(maValeurStr) < borneMin or float(maValeurStr) >= borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(float, _convertirType("float", maValeurStr, messageTypeErreur))
-
-    else:
-        while float(maValeurStr) <= borneMin or float(maValeurStr) >= borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(float, _convertirType("float", maValeurStr, messageTypeErreur))
-
-    return valeur
+    return estValide
 
 
 def saisieFloat(
-    message: str = "Veuillez saisir une valeur réel : ",
-    msgErreur: str = "Erreur de saisie, veuillez saisir une valeur réel : ",
+    message: str = "Veuillez saisir une valeur réelle : ",
+    msgErreur: str = "Erreur de saisie, veuillez saisir une valeur réelle valide : ",
     borneMin: float = constante.MINFLOAT,
     borneMax: float = constante.MAXFLOAT,
     MinInclus: bool = True,
     MaxInclus: bool = True
 ) -> float:
     """
-    Demande à l'utilisateur de saisir une valeur réel.
+    Demande à l'utilisateur de saisir un nombre réel compris dans l'intervalle spécifié.
+    Redemande la saisie tant que le type ou les bornes ne sont pas respectés.
     """
-    valeur: float
-    valeurStr: str
+    msgErreurType: str = "Veuillez saisir un nombre réel, pas une chaîne de caractères."
+    valeurStr: str = input(message)
+    valeurConvertie: int | float | str | None = _convertirType("float", valeurStr, msgErreurType)
+    valeurFloat: float
+    estValide: bool = False
+    resultat: float = 0.0
 
-    valeurStr = str(input(message))
-    valeur = cast(float, _convertirType("float", valeurStr, "Veuillez saisir un nombre réel, pas une chaine de caractère."))
-    valeur = _verifFloat(valeur, msgErreur, borneMin, borneMax, MinInclus, MaxInclus)
+    while not estValide:
+        if valeurConvertie is not None:
+            valeurFloat = cast(float, valeurConvertie)
+            if _estDansIntervalle(valeurFloat, borneMin, borneMax, MinInclus, MaxInclus):
+                resultat = valeurFloat
+                estValide = True
 
-    return valeur
+        if not estValide:
+            valeurStr = input(msgErreur)
+            valeurConvertie = _convertirType("float", valeurStr, msgErreurType)
 
-
-def _verifEntier(
-    valeur: int,
-    msgErreur: str,
-    borneMin: int,
-    borneMax: int,
-    MinInclus: bool,
-    MaxInclus: bool
-) -> int:
-    """
-    Verifie si un entier est bien dans un intervalle donne.
-    """
-    maValeurStr: str = str(valeur)
-    msgErreurType: str = "Veuillez saisir un nombre entier, pas une chaine de caractère ni un nombre réel."
-
-    if MinInclus and MaxInclus:
-        while int(maValeurStr) < borneMin or int(maValeurStr) > borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(int, _convertirType("int", maValeurStr, msgErreurType))
-
-    elif not MinInclus and MaxInclus:
-        while int(maValeurStr) <= borneMin or int(maValeurStr) > borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(int, _convertirType("int", maValeurStr, msgErreurType))
-
-    elif MinInclus and not MaxInclus:
-        while int(maValeurStr) < borneMin or int(maValeurStr) >= borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(int, _convertirType("int", maValeurStr, msgErreurType))
-
-    else:
-        while int(maValeurStr) <= borneMin or int(maValeurStr) >= borneMax:
-            maValeurStr = str(input(msgErreur))
-            valeur = cast(int, _convertirType("int", maValeurStr, msgErreurType))
-
-    return valeur
+    return resultat
 
 
 def saisieEntier(
-    message: str,
-    msgErreur: str,
+    message: str = "Veuillez saisir une valeur entière : ",
+    msgErreur: str = "Erreur de saisie, veuillez saisir une valeur entière valide : ",
     borneMin: int = constante.MININT,
     borneMax: int = constante.MAXINT,
     MinInclus: bool = True,
     MaxInclus: bool = True
 ) -> int:
     """
-    Demande à l'utilisateur de saisir une valeur entière.
+    Demande à l'utilisateur de saisir un nombre entier compris dans l'intervalle spécifié.
+    Redemande la saisie tant que le type ou les bornes ne sont pas respectés.
     """
-    valeur: int
-    valeurStr: str
+    msgErreurType: str = "Veuillez saisir un nombre entier, pas une chaîne de caractères ni un réel."
+    valeurStr: str = input(message)
+    valeurConvertie: int | float | str | None = _convertirType("int", valeurStr, msgErreurType)
+    valeurInt: int
+    estValide: bool = False
+    resultat: int = 0
 
-    valeurStr = str(input(message))
-    valeur = cast(int, _convertirType("int", valeurStr, "Veuillez saisir un nombre entier, pas une chaine de caractère ni un nombre réel."))
-    valeur = _verifEntier(valeur, msgErreur, borneMin, borneMax, MinInclus, MaxInclus)
+    while not estValide:
+        if valeurConvertie is not None:
+            valeurInt = cast(int, valeurConvertie)
+            if _estDansIntervalle(valeurInt, borneMin, borneMax, MinInclus, MaxInclus):
+                resultat = valeurInt
+                estValide = True
 
-    return valeur
+        if not estValide:
+            valeurStr = input(msgErreur)
+            valeurConvertie = _convertirType("int", valeurStr, msgErreurType)
+
+    return resultat
 
 
 def _verifStrInL(chaine: str, listValidChaine: list[str], msgErreur: str) -> str:
     """
-    Verifie si la chaine de caractere saisie est dans les choix possibles.
+    Vérifie si la chaîne saisie appartient à la liste des choix autorisés.
     """
     while chaine not in listValidChaine:
-        chaine = str(input(msgErreur))
+        chaine = input(msgErreur)
+
     return chaine
 
 
 def saisieStr(listValidChaine: list[str], message: str, msgErreur: str) -> str:
     """
-    Demande à l'utilisateur de saisir une chaine de caractere parmi une liste valide.
+    Demande à l'utilisateur de saisir une chaîne de caractères parmi une liste de choix valides.
     """
-    chaine: str
-
-    chaine = str(input(message))
+    chaine: str = input(message)
     chaine = _verifStrInL(chaine, listValidChaine, msgErreur)
+
     return chaine
 
 
@@ -181,43 +144,45 @@ def saisieChaineCaractereInterdit(
     caracteresInterdit: list[str] | None = None
 ) -> str:
     """
-    Demande une chaîne de caractères ne contenant aucun des caractères interdits.
+    Demande une chaîne de caractères ne contenant aucun des caractères interdits fournis.
     """
-    chaine: str = str(input(message)).strip()
-    valid: bool = False
+    chaine: str = input(message).strip()
+    estValide: bool = False
     caracInterdit: str
     listeInterdits: list[str] = caracteresInterdit if caracteresInterdit is not None else []
 
-    while not valid:
-        valid = True
+    while not estValide:
+        estValide = True
         for caracInterdit in listeInterdits:
             if caracInterdit in chaine:
-                valid = False
-                chaine = str(input(msgErreur)).strip()
+                estValide = False
+        if not estValide:
+            chaine = input(msgErreur).strip()
 
     return chaine
 
 
 def saisieYesOrNO(message: str) -> bool:
     """
-    Fonction demandant oui ou non à l'utilisateur, renvoie True si oui/yes/y, False si non/no/n.
+    Demande une confirmation (oui/non ou yes/no) à l'utilisateur.
+    Retourne True pour une réponse positive, False pour une réponse négative.
     """
     enAccord: bool = False
     aRepondu: bool = False
     reponse: str
-    listReponseVrai: list[str] = ["oui", "Oui", "OUI", "yes", "Yes", "y", "Y"]
-    listReponseFaux: list[str] = ["non", "Non", "NON", "no", "No", "n", "N"]
+    reponsesVrai: list[str] = ["oui", "o", "yes", "y"]
+    reponsesFaux: list[str] = ["non", "n", "no"]
 
-    reponse = input(message)
+    reponse = input(message).strip().lower()
     while not aRepondu:
-        if reponse in listReponseVrai:
+        if reponse in reponsesVrai:
             enAccord = True
             aRepondu = True
-        elif reponse in listReponseFaux:
+        elif reponse in reponsesFaux:
             enAccord = False
             aRepondu = True
         else:
-            print(f"Saisie incorrect, choix accepté : \n {listReponseVrai} \n {listReponseFaux}")
-            reponse = input(message)
+            print(f"Saisie incorrecte, choix acceptés : {reponsesVrai} ou {reponsesFaux}")
+            reponse = input(message).strip().lower()
 
     return enAccord

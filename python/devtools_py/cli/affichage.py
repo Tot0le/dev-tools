@@ -1,24 +1,34 @@
 import os
+import subprocess
 
-def ALaLigne(monNombreDeFois: int) -> None:
-    i: int
 
-    for i in range(monNombreDeFois):
+def ALaLigne(monNombreDeFois: int = 1) -> None:
+    """
+    Affiche un nombre donné de sauts de ligne dans la console (1 par défaut).
+    """
+    for _ in range(monNombreDeFois):
         print()
 
 
 def pressEnterToContinue(langue: str = "en") -> None:
     """
-    Fonction qui fait qu'on doit appuyer sur entrée pour continuer
+    Met le programme en pause jusqu'à ce que l'utilisateur appuie sur Entrée.
+    Langues supportées : 'fr' ou 'en' (par défaut).
     """
-    langue = langue.lower()
-    match langue:
+    langueNormalisee: str = langue.strip().lower()
+
+    match langueNormalisee:
         case "fr":
             input("Appuyez sur Entrée pour continuer...")
         case _:
-            input("Press Enter to continue.")
+            input("Press Enter to continue...")
 
 
 def clearConsole() -> None:
-    os.system('cls' if os.name == 'nt' else 'clear')
-    
+    """
+    Efface le contenu du terminal (compatible Windows et Unix/Linux/macOS).
+    """
+    if os.name == "nt":
+        subprocess.run("cls", shell=True, check=False)
+    else:
+        subprocess.run(["clear"], check=False)
