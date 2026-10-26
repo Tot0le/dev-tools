@@ -53,30 +53,46 @@ from devtools_py.files import (
     afficher_objet_fichier_bin,
 )
 from devtools_py.math_sets import (
-    estPremier,
+    # English & Bilingual API
+    is_prime,
     fibonacci_iterative,
     fibonacci_recursive,
-    factorielle,
-    genererListeValeurEntierAleatoire,
-    nbValeursEnDoublon,
-    nbElementUniqueDansListe,
-    estUnEnsemble,
-    rajoutSiPasDedans,
+    factorial,
+    generate_random_int_list,
+    count_duplicate_values,
+    count_distinct_values,
+    is_set,
+    add_to_set,
     union,
     intersection,
     difference,
-    disjointes,
+    are_disjoint,
+    # French API
+    est_premier,
+    factorielle,
+    generer_liste_entiers_aleatoires,
+    compter_valeurs_en_doublon,
+    compter_valeurs_distinctes,
+    est_un_ensemble,
+    ajouter_si_absent,
+    sont_disjointes,
 )
 from devtools_py.strings import (
-    compterNombreOccurences,
-    enleverOccurence,
-    ajouterOccurence,
-    verifierStockDispo,
+    # English API
+    count_char_occurrences,
+    decrement_char_occurrence,
+    increment_char_occurrence,
+    has_remaining_count,
+    # French API
+    compter_occurrences,
+    decrementer_occurrence,
+    incrementer_occurrence,
+    a_quantite_restante,
 )
 
 __all__: list[str] = [
     "constants",
-    # --- English API ---
+    # --- English & Bilingual API ---
     # CLI
     "print_newlines",
     "wait_for_enter",
@@ -102,6 +118,25 @@ __all__: list[str] = [
     "get_all_objects_values_from_binary_file",
     "print_objects_from_binary_file",
     "print_single_object_from_binary_file",
+    # Math & Sets
+    "is_prime",
+    "fibonacci_iterative",
+    "fibonacci_recursive",
+    "factorial",
+    "generate_random_int_list",
+    "count_duplicate_values",
+    "count_distinct_values",
+    "is_set",
+    "add_to_set",
+    "union",
+    "intersection",
+    "difference",
+    "are_disjoint",
+    # Strings
+    "count_char_occurrences",
+    "decrement_char_occurrence",
+    "increment_char_occurrence",
+    "has_remaining_count",
     # --- French API ---
     # CLI
     "aller_a_la_ligne",
@@ -128,22 +163,17 @@ __all__: list[str] = [
     "afficher_objets_fichier_bin",
     "afficher_objet_fichier_bin",
     # Math & Sets
-    "estPremier",
-    "fibonacci_iterative",
-    "fibonacci_recursive",
+    "est_premier",
     "factorielle",
-    "genererListeValeurEntierAleatoire",
-    "nbValeursEnDoublon",
-    "nbElementUniqueDansListe",
-    "estUnEnsemble",
-    "rajoutSiPasDedans",
-    "union",
-    "intersection",
-    "difference",
-    "disjointes",
+    "generer_liste_entiers_aleatoires",
+    "compter_valeurs_en_doublon",
+    "compter_valeurs_distinctes",
+    "est_un_ensemble",
+    "ajouter_si_absent",
+    "sont_disjointes",
     # Strings
-    "compterNombreOccurences",
-    "enleverOccurence",
-    "ajouterOccurence",
-    "verifierStockDispo",
+    "compter_occurrences",
+    "decrementer_occurrence",
+    "incrementer_occurrence",
+    "a_quantite_restante",
 ]

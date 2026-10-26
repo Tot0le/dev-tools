@@ -1,86 +1,89 @@
 from typing import cast
 
 
-def compterNombreOccurences(
-    monMot: str,
-    onlyThisChar: list[str] | None = None
+def count_char_occurrences(
+    text: str,
+    target_chars: list[str] | None = None
 ) -> list[list[str | int]]:
     """
-    Compte le nombre d'occurrences de chaque caractère dans 'monMot'.
-    Si 'onlyThisChar' est fourni, ne compte que les caractères présents dans cette liste.
-    Retourne une liste de paires [caractere, nbOccurences], ex: [['A', 2], ['B', 1]].
+    Count the occurrences of each character in 'text'.
+    If 'target_chars' is provided, only count characters present in that list.
+    Return a list of pairs [character, count], e.g., [['A', 2], ['B', 1]].
     """
-    listeOccurences: list[list[str | int]] = []
-    caracteresCibles: list[str] = []
-    caractere: str
-    caractereMot: str
-    compteur: int
+    occurrences: list[list[str | int]] = []
+    chars_to_count: list[str] = []
+    char: str
+    text_char: str
+    count: int
 
-    if onlyThisChar is not None:
-        caracteresCibles = onlyThisChar
+    if target_chars is not None:
+        chars_to_count = target_chars
     else:
-        for caractere in monMot:
-            if caractere not in caracteresCibles:
-                caracteresCibles.append(caractere)
+        for char in text:
+            if char not in chars_to_count:
+                chars_to_count.append(char)
 
-    for caractere in caracteresCibles:
-        compteur = 0
-        for caractereMot in monMot:
-            if caractereMot == caractere:
-                compteur += 1
-        listeOccurences.append([caractere, compteur])
+    for char in chars_to_count:
+        count = 0
+        for text_char in text:
+            if text_char == char:
+                count += 1
+        occurrences.append([char, count])
 
-    return listeOccurences
+    return occurrences
 
 
-def enleverOccurence(
-    listeOccurences: list[list[str | int]],
-    lettre: str
+def decrement_char_occurrence(
+    occurrences: list[list[str | int]],
+    char: str
 ) -> list[list[str | int]]:
     """
-    Décrémente de 1 le compteur d'occurrences associé à 'lettre' dans 'listeOccurences'.
+    Decrement the occurrence count of 'char' by 1 in the 'occurrences' list.
     """
-    paire: list[str | int]
-    valeurActuelle: int
+    pair: list[str | int]
+    current_count: int
 
-    for paire in listeOccurences:
-        if paire[0] == lettre:
-            valeurActuelle = cast(int, paire[1])
-            paire[1] = valeurActuelle - 1
+    for pair in occurrences:
+        if pair[0] == char:
+            current_count = cast(int, pair[1])
+            pair[1] = current_count - 1
 
-    return listeOccurences
+    return occurrences
 
 
-def ajouterOccurence(
-    listeOccurences: list[list[str | int]],
-    lettre: str
+def increment_char_occurrence(
+    occurrences: list[list[str | int]],
+    char: str
 ) -> list[list[str | int]]:
     """
-    Incrémente de 1 le compteur d'occurrences associé à 'lettre' dans 'listeOccurences'.
+    Increment the occurrence count of 'char' by 1 in the 'occurrences' list.
     """
-    paire: list[str | int]
-    valeurActuelle: int
+    pair: list[str | int]
+    current_count: int
 
-    for paire in listeOccurences:
-        if paire[0] == lettre:
-            valeurActuelle = cast(int, paire[1])
-            paire[1] = valeurActuelle + 1
+    for pair in occurrences:
+        if pair[0] == char:
+            current_count = cast(int, pair[1])
+            pair[1] = current_count + 1
 
-    return listeOccurences
+    return occurrences
 
 
-def verifierStockDispo(listeOccurences: list[list[str | int]], lettre: str) -> bool:
+def has_remaining_count(
+    occurrences: list[list[str | int]],
+    char: str
+) -> bool:
     """
-    Retourne True si 'lettre' est présente dans 'listeOccurences' avec un compteur strictement positif.
+    Return True if 'char' is present in 'occurrences' with a count strictly greater than 0.
     """
-    stockDispo: bool = False
-    paire: list[str | int]
-    nbRestant: int
+    is_available: bool = False
+    pair: list[str | int]
+    remaining_count: int
 
-    for paire in listeOccurences:
-        if paire[0] == lettre:
-            nbRestant = cast(int, paire[1])
-            if nbRestant > 0:
-                stockDispo = True
+    for pair in occurrences:
+        if pair[0] == char:
+            remaining_count = cast(int, pair[1])
+            if remaining_count > 0:
+                is_available = True
 
-    return stockDispo
+    return is_available
